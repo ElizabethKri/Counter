@@ -9,7 +9,8 @@ type DataCounterType = {
     setError: (error: string | null) => void
     setValueNumStart: (valueNumStart: number) => void
     setValueNumMax: (valueNumMax: number) => void
-    onClick: () => void
+    isEdit: boolean
+    setIsEdit: (isEdit: boolean) => void
 
 } & CounterType
 
@@ -24,59 +25,73 @@ const DataCounter = ({
                          setDisabled,
                          error,
                          setError,
-                         onClick
+                         setIsEdit
                      }: DataCounterType) => {
 
-   // const [text, setText] = useState(false)
+    // const [text, setText] = useState(false)
 
 
     const styleMaxInput = error === 'Incorrect max value!' ? 'error' : ''
     const styleStartInput = error === 'Incorrect start value!' ? 'error' : ''
 
+
+
     const onChangeStartValHandler = (value: number) => {
         setValueNumStart(value)
-        if (value === valueNumMax || value < 0 || value > valueNumMax){
-            setDisabled(true)
-            setError('Incorrect start value!')
+        setIsEdit(true)
+        const errorConditionStart = value === valueNumMax || value < 0 || value > valueNumMax
+        if (errorConditionStart) {
+            setDisabled (true)
+            setError ('Incorrect start value!')
+            setIsEdit(false)
+        } else {
+            setDisabled (false)
+            setError (null)
+            setIsEdit(true)
         }
-        else {
-            setDisabled(false)
-            setError(null)
-        }
-
-
     }
 
     const onChangeMaxValHandler = (valueNum: number) => {
         // актуальное значение value - valueNumMax
-        setValueNumMax(valueNum)
-        if(valueNumStart === valueNum || valueNum < 0 || valueNum < valueNumStart) {
-            setDisabled(true)
-            setError('Incorrect max value!')
+        setValueNumMax (valueNum)
+        setIsEdit(true)
+        const errorConditionMax = valueNumStart === valueNum || valueNum < 0 || valueNum < valueNumStart
+        if (errorConditionMax) {
+            setDisabled (true)
+            setError ('Incorrect max value!')
+            // setText('')
+            setIsEdit(false)
         } else {
-            setDisabled(false)
-            setError(null)
+            setDisabled (false)
+            setError (null)
+            setIsEdit(true)
         }
+
     }
 
     const onClickHandlerSet = () => {
-        setValue(valueNumStart)
-        if(valueNum === valueNumStart){
-            setDisabled(false)
+        setValue (valueNumStart)
+        setIsEdit(false)
+        if (valueNum === valueNumStart) {
+            setDisabled (false)
+        } else {
+            setDisabled (true)
+            // setText('')
         }
-        else {
-            setDisabled(true)
-        }
-        onClick()
+        localStorage.setItem ('counterValueNumStart', JSON.stringify (valueNumStart))
+        localStorage.setItem ('counterValueNumMax', JSON.stringify (valueNumMax))
+        localStorage.setItem('counterValueNum', JSON.stringify(valueNumStart))
+
     }
 
 
     return (
         <div style={{'border': '1px solid green'}}>
-            <div>Max value: <Input  style={styleMaxInput} value={valueNumMax} setValue={onChangeMaxValHandler} /></div>
-            <div>Start value: <Input style={styleStartInput} value={valueNumStart} setValue={onChangeStartValHandler}/></div>
+            <div>Max value: <Input style={styleMaxInput} value={valueNumMax} setValue={onChangeMaxValHandler}/></div>
+            <div>Start value: <Input style={styleStartInput} value={valueNumStart} setValue={onChangeStartValHandler}/>
+            </div>
             {/*Записывает данные*/}
-            <Button title={'set'} onClick={onClickHandlerSet} disabled={disabled}  />
+            <Button title={'set'} onClick={onClickHandlerSet} disabled={disabled}/>
         </div>
     );
 };

@@ -11,31 +11,23 @@ function App() {
     const [valueNumMax, setValueNumMax] = useState<number>(7)
     const [disabled, setDisabled] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [isEdit, setIsEdit] = useState<boolean>(true)
 
 
 
-    const onClickSetHandler = () => {
-        useEffect (() => {
-            const valueStringNumStart = localStorage.getItem('counterValueNumStart')
-            if (valueStringNumStart){
-                return setValueNumStart(JSON.parse(valueStringNumStart))
-            }
-        }, []);
+    useEffect (() => {
+        const valueStringNumStart = localStorage.getItem('counterValueNumStart')
+        if (valueStringNumStart){
+            return setValueNumStart(JSON.parse(valueStringNumStart))
+        }
+    }, []);
 
-        useEffect (() => {
-            const valueStringNumMax = localStorage.getItem('counterValueNumMax')
-            if (valueStringNumMax){
-                return setValueNumMax(JSON.parse(valueStringNumMax))
-            }
-        }, []);
-
-        useEffect(() => localStorage.setItem('counterValueNumStart', JSON.stringify(valueNumStart)), [valueNumStart])
-        useEffect(() => localStorage.setItem('counterValueNumMax', JSON.stringify(valueNumMax)), [valueNumMax])
-    }
-
-
-
-
+    useEffect (() => {
+        const valueStringNumMax = localStorage.getItem('counterValueNumMax')
+        if (valueStringNumMax){
+            return setValueNumMax(JSON.parse(valueStringNumMax))
+        }
+    }, []);
 
     //'enter values and press set'
 
@@ -50,13 +42,16 @@ function App() {
                      setDisabled={setDisabled}
                      error={error}
                      setError={setError}
-                     onClick={onClickSetHandler}
+                     isEdit = {isEdit}
+                     setIsEdit = {setIsEdit}
         />
         <Counter  valueNum = {value}
                   setValue = {setValue}
                   valueNumStart = {valueNumStart}
                   valueNumMax = {valueNumMax}
-                  error = {error}/>
+                  error = {error}
+                  isEdit = {isEdit}
+        />
 
     </>
 }

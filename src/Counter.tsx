@@ -6,6 +6,7 @@ export type CounterType = {
     valueNumStart: number
     valueNumMax: number
     error: string | null
+    isEdit: boolean
 }
 
 const Counter = ({
@@ -13,27 +14,30 @@ const Counter = ({
                      setValue,
                      valueNumStart,
                      valueNumMax,
-                     error
+                     error,
+                     isEdit
                  }: CounterType) => {
 
 
-    const incDisabled = valueNum === valueNumMax || valueNumStart < 0 || valueNumMax < 0 || valueNumMax === valueNumStart
-    const resetDisabled = valueNumStart < 0 || valueNumMax < 0 || valueNumMax === valueNumStart
+    const incDisabled = valueNum === valueNumMax || valueNumStart < 0 || valueNumMax < 0 || valueNumMax === valueNumStart || valueNumStart > valueNumMax
+    const resetDisabled = valueNumStart < 0 || valueNumMax < 0 || valueNumMax === valueNumStart || valueNumStart > valueNumMax
 
     const onClickHandlerInc = () => {
-        setValue(valueNum + 1)
+        setValue (valueNum + 1)
     }
 
     const onClickHandlerReset = () => {
-        setValue(valueNumStart)
+        setValue (valueNumStart)
     }
 
+    const textValue = 'Enter values and press set'
 
     return (
-        <div style={{'border': '1px solid white'}}>
-            <h2 className={valueNumMax === valueNum || !!error ? 'error-text' : ''}>{error ? error : valueNum}</h2>
+        <div style={{'border': '1px solid white', 'padding': '25px'}}>
+            {/*<h2 className={valueNumMax === valueNum || !!error ? 'error-text' : ''}>{text ? text : valueNum || error}</h2>*/}
+            <h2 className={valueNumMax === valueNum || !!error ? 'error-text' : ''}>{isEdit ? textValue : error || valueNum}</h2>
             {/*Добавляют +1, до тех пор, когда доходим до макс значения*/}
-            <Button title={'inc'} onClick={onClickHandlerInc} disabled = {incDisabled}/>
+            <Button title={'inc'} onClick={onClickHandlerInc} disabled={incDisabled}/>
             {/*Обнуляет до статового значения*/}
             <Button title={'reset'} onClick={onClickHandlerReset} disabled={resetDisabled}/>
         </div>
